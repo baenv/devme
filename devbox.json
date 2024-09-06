@@ -54,7 +54,7 @@
       "zookeeper-daemon": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG start",
       "zookeeper-stop": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG stop",
       "zookeeper-status": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG status",
-      "zookeeper-kill": "sudo kill $(ps aux | grep zookeeper | awk '{print $2}') || true",
+      "zookeeper-kill": "sudo kill $(ps aux | grep zookeeper | awk '{print $2}')",
       "kafka": "sudo $DEVBOX_PACKAGES_DIR/bin/kafka-server-start.sh $KAFKA_CONFIG/server.properties",
       "kafka-daemon": "sudo $DEVBOX_PACKAGES_DIR/bin/kafka-server-start.sh -daemon $KAFKA_CONFIG/server.properties",
       "kafka-stop": "sudo $DEVBOX_PACKAGES_DIR/bin/kafka-server-stop.sh $KAFKA_CONFIG/server.properties"

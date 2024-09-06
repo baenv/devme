@@ -34,15 +34,15 @@ processes:
     readiness_probe:
       exec:
         command: "sudo devbox run zookeeper-status | grep -q 'Mode: standalone'"
-        interval: 10s
-        timeout: 10s
+        interval: 20s
+        timeout: 20s
         retries: 5
   
   kafka:
     command: "devbox run kafka-daemon"
     is_daemon: true
     shutdown:
-      command: "devbox run kafka-stop && devbox run zookeeper-kill"
+      command: "devbox run kafka-stop"
     availability:
       restart: "always"    
     depends_on:

@@ -2,6 +2,8 @@
 
 This repository contains configuration files to set up a comprehensive development environment using [Devbox](https://www.jetpack.io/devbox/). Devbox is a powerful tool that allows developers to create reproducible and isolated development environments.
 
+![](./assets/process-compose.png)
+
 ## Overview
 
 The setup includes the following main components:
