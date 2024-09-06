@@ -1,0 +1,7 @@
+.devbox
+devbox.d
+node_modules
+devbox.lock
+pnpm-lock.yaml
+scripts
+package.json

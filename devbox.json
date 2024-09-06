@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.1/.schema/devbox.schema.json",
+  "packages": {
+    "github:NixOS/nixpkgs#darwin.apple_sdk.frameworks.CoreText": "",
+    "nodejs":                                                    "18",
+    "pnpm_8":                                                    "8.15.9",
+    "pkg-config":                                                "0.29.2",
+    "pango": {
+      "version": "1.52.2",
+      "outputs": ["dev"]
+    },
+    "libpng": "1.6.43",
+    "giflib": "5.2.2",
+    "librsvg": {
+      "version": "2.58.2",
+      "outputs": ["dev"]
+    },
+    "python3": "3.11.9",
+    "pixman":  "0.43.4",
+    "cairo": {
+      "version": "1.18.0",
+      "outputs": ["dev"]
+    },
+    "libjpeg": {
+      "version": "3.0.3",
+      "outputs": ["dev"]
+    },
+
+    "elixir":                            "1.15.7",
+    "github:baenv/timescalepg-fake#postgresql": "",
+
+    "redis":           "7.2.5",
+    "redis-plus-plus": "1.3.12",
+    
+    "apacheKafka": {
+      "version": "2.13-3.8.0",
+      "outputs": ["out"]
+    },
+    "kafkactl":  "5.0.6",
+    "zookeeper": "3.9.2"
+  },
+  "env": {
+    "PKG_CONFIG_PATH": "$DEVBOX_PACKAGES_DIR/lib/pkgconfig",
+    "KAFKA_CONFIG": "$DEVBOX_PACKAGES_DIR/config"
+  },
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null",
+      ". $VENV_DIR/bin/activate",
+      "sudo cp $KAFKA_CONFIG/zookeeper.properties $KAFKA_CONFIG/zoo.cfg"
+    ],
+    "scripts": {
+      "zookeeper": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG start-foreground",
+      "zookeeper-daemon": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG start",
+      "zookeeper-stop": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG stop",
+      "zookeeper-status": "sudo $DEVBOX_PACKAGES_DIR/bin/zkServer.sh --config $KAFKA_CONFIG status",
+      "zookeeper-kill": "sudo kill $(ps aux | grep zookeeper | awk '{print $2}') || true",
+      "kafka": "sudo $DEVBOX_PACKAGES_DIR/bin/kafka-server-start.sh $KAFKA_CONFIG/server.properties",
+      "kafka-daemon": "sudo $DEVBOX_PACKAGES_DIR/bin/kafka-server-start.sh -daemon $KAFKA_CONFIG/server.properties",
+      "kafka-stop": "sudo $DEVBOX_PACKAGES_DIR/bin/kafka-server-stop.sh $KAFKA_CONFIG/server.properties"
+    }
+  },
+  "include": [
+    "plugin:postgresql"
+  ]
+}

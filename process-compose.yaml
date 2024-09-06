@@ -1,0 +1,56 @@
+version: "0.5"
+
+processes:
+  postgresql:
+    command: |
+      rm -rf ${PGDATA} 
+      initdb --username=postgres
+      if ! grep -q "shared_preload_libraries = 'timescaledb'" $PGDATA/postgresql.conf; then
+        echo "shared_preload_libraries = 'timescaledb'" >> $PGDATA/postgresql.conf
+      fi
+      pg_ctl start -o "-k $PGHOST"
+    is_daemon: true
+    shutdown: 
+      command: "pg_ctl stop -m fast"
+    availability:
+      restart: "always"
+    readiness_probe:
+      exec:
+        command: "pg_isready"
+        
+  redis:
+    command: "redis-server $REDIS_CONF --port $REDIS_PORT"
+    availability:
+      restart: on_failure
+      max_restarts: 5
+      
+  zookeeper:
+    command: "devbox run zookeeper-daemon"
+    is_daemon: true
+    shutdown:
+      command: "devbox run zookeeper-stop"
+    availability:
+      restart: "always"    
+    readiness_probe:
+      exec:
+        command: "sudo devbox run zookeeper-status | grep -q 'Mode: standalone'"
+        interval: 10s
+        timeout: 10s
+        retries: 5
+  
+  kafka:
+    command: "devbox run kafka-daemon"
+    is_daemon: true
+    shutdown:
+      command: "devbox run kafka-stop && devbox run zookeeper-kill"
+    availability:
+      restart: "always"    
+    depends_on:
+      zookeeper:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: "kafkactl get brokers | grep -v 'connection refused'"
+        interval: 10s
+        timeout: 10s
+        retries: 5
